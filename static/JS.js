@@ -1,9 +1,38 @@
+var employeeData = {};
+var activeEmployee = [];
+
 $( document ).ready(function() {
-    console.log( "ready!" );
-    $("#addEmployee").click(function() {
-      $("#divdeps").dialog("open");
-    });
-    $("#divdeps").dialog({
+  console.log( "ready!" );
+  getEmployeeList()
+  .done(function(response) {
+    console.log('Employees retrieved!');
+    console.log(response);
+    employeeData = response;
+    for (i = 0; i < response.employees.length; i++) {
+      console.log(response.employees[i].name);
+      $("#employeeList").append("<option id='employeeSelect'>" + response.employees[i].name + "</option>");
+    }
+  });
+  $('#employeeList').on('change', function(response){
+    console.log($(this).val());
+    for (i = 0; i < employeeData.employees.length; i++) {
+      if (employeeData.employees[i].name == $(this).val()) {
+        console.log("Match found in employee records!");
+        activeEmployee = [];
+        activeEmployee.push(employeeData.employees[i].id);
+        console.log(activeEmployee);
+      }
+    }
+  });
+  $("#clockInButton").click(function(activeEmployee) {
+    clockIn(activeEmployee);
+  });
+  $("#addEmployee").click(function() {
+    $("#employeeBox").addClass("hidden");
+    $("#employeeDropdown").addClass("hidden");
+    $("#divdeps").dialog("open");
+  });
+  $("#divdeps").dialog({
     autoOpen: false,
     show: 'slide',
     resizable: false,
@@ -12,23 +41,59 @@ $( document ).ready(function() {
     height: 'auto',
     width: 'auto',
     modal: true
-    });
-    $("#closeWindow").click(function() {
-      $("#divdeps").dialog("close");
-    });
-    $("#addTheEmployee").click(function() {
-      var firstName = $("#firstName").val();
-      var lastName = $("#lastName").val();
-      $.ajax({
-        url: '/',
-        data: $('form').serialize(),
-        type: 'POST',
-        success: function(response) {
-          console.log(response);
-        },
-        error: function(error) {
-          console.log(error);
-        }
-      });
-    });
+  });
+  $("#closeWindow").click(function() {
+    $("#divdeps").dialog("close");
+    $("#employeeBox").removeClass("hidden");
+  });
+  $("#addTheEmployee").click(function() {
+    var firstName = $("#firstName").val();
+    var lastName = $("#lastName").val();
+    $("#employeeBox").addClass("hidden");
+    addEmployee(firstName, lastName)
+  });
 });
+
+
+function getEmployeeList() {
+  return $.ajax({
+    url: '/api/v1/employees',
+    type: 'GET',
+    success: function(response) {
+      console.log(response);
+    },
+    error: function(error) {
+      console.log(error);
+    }
+  });
+}
+
+function addEmployee(firstName, lastName) {
+  $.ajax({
+    url: '/',
+    data: $('form').serialize(),
+    type: 'POST',
+    success: function(response) {
+      console.log(response);
+      $("#divdeps").dialog("close");
+      $("#employeeList").append("<a href='#' class='list-group-item'>" + firstName + " " + lastName + "</a>");
+    },
+    error: function(error) {
+      console.log(error);
+    }
+  });
+}
+
+function clockIn(employee) {
+  $.ajax({
+    url: '/',
+    data: employee,
+    type: 'POST',
+    success: function(response) {
+      console.log("JUST LOGGED THE TIME");
+    },
+    error: function(error) {
+      console.log(error);
+    }
+  });
+}

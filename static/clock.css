@@ -1,0 +1,25 @@
+body {
+  background-color: green;
+  color: white;
+}
+
+#clockHeader {
+  font-family: 'Monoton', cursive;
+  font-size: 90px;
+}
+
+#employeeDropdown {
+  background-color: #39dd5a;
+  border-color: white;
+  border-width: 1px;
+  border-radius: 1px;
+  color: black;
+}
+
+.hidden {
+  display: none;
+}
+
+#clockButtons {
+  padding-top: 30%;
+}
