@@ -11,7 +11,7 @@ $( document ).ready(function() {
     employeeData = response;
     for (i = 0; i < response.employees.length; i++) {
       console.log(response.employees[i].name);
-      $("#employeeList").append("<option id='employeeSelect'>" + response.employees[i].name + "</option>");
+      $("#employeeList").append("<option value='" + response.employees[i].id + " '>" + response.employees[i].name + "</option>");
     }
   });
   $('#employeeList').on('change', function(response){
@@ -25,8 +25,10 @@ $( document ).ready(function() {
       }
     }
   });
-  $("#clockInButton").click(function(activeEmployee) {
-    clockIn(activeEmployee.currentEmployee);
+  $("#clockInButton").click(function(event) {
+     var employee_list = document.getElementById("employeeList");
+     var the_id = employee_list.options[employee_list.selectedIndex].value;
+    clockIn(the_id);
   });
   $("#addEmployee").click(function() {
     $("#employeeBox").addClass("hidden");
@@ -88,7 +90,7 @@ function addEmployee(firstName, lastName) {
 function clockIn(employeeID) {
   $.ajax({
     url: '/postmethod',
-    data: {id: 2}, // FIX so we receive the right thing here.
+    data: {id: employeeID}, // FIX so we receive the right thing here.
     type: 'POST',
     success: function(response) {
       console.log("You clicked clock in!");
