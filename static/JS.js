@@ -1,5 +1,5 @@
 var employeeData = {};
-var activeEmployee = [];
+var activeEmployee = {};
 
 $( document ).ready(function() {
   console.log( "ready!" );
@@ -18,14 +18,14 @@ $( document ).ready(function() {
     for (i = 0; i < employeeData.employees.length; i++) {
       if (employeeData.employees[i].name == $(this).val()) {
         console.log("Match found in employee records!");
-        activeEmployee = [];
-        activeEmployee.push(employeeData.employees[i].id);
-        console.log(activeEmployee);
+        activeEmployee = {"currentEmployee" : 0};
+        activeEmployee.currentEmployee = employeeData.employees[i].id;
+        console.log(activeEmployee.currentEmployee);
       }
     }
   });
   $("#clockInButton").click(function(activeEmployee) {
-    clockIn(activeEmployee);
+    clockIn(activeEmployee.currentEmployee);
   });
   $("#addEmployee").click(function() {
     $("#employeeBox").addClass("hidden");
@@ -84,13 +84,13 @@ function addEmployee(firstName, lastName) {
   });
 }
 
-function clockIn(employee) {
+function clockIn(employeeID) {
   $.ajax({
-    url: '/',
-    data: employee,
+    url: '/postmethod',
+    data: JSON.stringify(employeeID),
     type: 'POST',
     success: function(response) {
-      console.log("JUST LOGGED THE TIME");
+      console.log("You clicked clock in!");
     },
     error: function(error) {
       console.log(error);

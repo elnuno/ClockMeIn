@@ -42,14 +42,14 @@ def addAnEmployee():
     conn.close()
     return "SUCCESS!"
 
-@app.route('/', methods=['POST'])
-def clockIn(data):
+@app.route('/postmethod', methods=['POST'])
+def clockIn():
+    employee_id = request.data
     conn = e.connect()
-    currentTime = str(datetime.now())
-    employeeID = data.employeeID;
-    query = conn.execute("UPDATE employees SET clockIn =" + currentTime + " WHERE id=" + employeeID)
-    conn.commit()
+    current_time = str(datetime.now())
+    conn.execute("UPDATE employees SET clockIn=? WHERE id=?", (current_time, employee_id))
     conn.close()
+    return "you Clocked IN!@#!@#!@DF"
 
 
 
