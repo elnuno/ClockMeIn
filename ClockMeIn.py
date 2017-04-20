@@ -44,7 +44,10 @@ def addAnEmployee():
 
 @app.route('/postmethod', methods=['POST'])
 def clockIn():
-    employee_id = request.data
+    print('Request form:', request.form)
+    print('Request data:', request.data)
+    employee_id = request.form['id']
+    print('Employee ID', employee_id)
     conn = e.connect()
     current_time = str(datetime.now())
     conn.execute("UPDATE employees SET clockIn=? WHERE id=?", (current_time, employee_id))

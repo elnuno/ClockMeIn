@@ -1,6 +1,7 @@
 var employeeData = {};
 var activeEmployee = {};
 
+
 $( document ).ready(function() {
   console.log( "ready!" );
   getEmployeeList()
@@ -87,7 +88,7 @@ function addEmployee(firstName, lastName) {
 function clockIn(employeeID) {
   $.ajax({
     url: '/postmethod',
-    data: JSON.stringify(employeeID),
+    data: {id: 2}, // FIX so we receive the right thing here.
     type: 'POST',
     success: function(response) {
       console.log("You clicked clock in!");
